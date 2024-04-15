@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strona Voicebot</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+  <div class="box">
+    <h1>Witaj w Voicebot!</h1>
+    <p>Aby kontynuować, zaloguj się.</p>
+    <button th:onclick="'window.location.href=\'' + @{/main} + '\''">Przejdź do logowania</button>
+  </div>
+</div>
+</body>
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .box {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+  }
+
+  h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2em;
+  }
+
+  p {
+    color: #555;
+    margin-bottom: 30px;
+  }
+
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 30px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 8px;
+    font-size: 18px;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+  }
+
+</style>
+</html>

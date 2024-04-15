@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strona Voicebot</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="logout-container">
+  <button class="logout-btn" id="logoutButton" th:onclick="'window.location.href=\'' + @{/} + '\''">Wyloguj</button>
+</div>
+
+<div class="container">
+  <div class="voicebot-box">
+    <div class="logo-container">
+      <img src="images/openai.png" alt="Logo Voice Bot">
+    </div>
+    <div class="buttons-container">
+      <button class="voicebot-btn" id="startButton" onclick="startRecording()">Start</button>
+      <button class="voicebot-btn" id="stopButton" onclick="stopRecording()">Stop</button>
+      <button class="voicebot-btn" id="restartButton" onclick="restartAudio()">Restart</button>
+
+    </div>
+    <div>
+      <audio id="audioPlayer" controls>
+        <source id="audioSource" type="audio/wav">
+        Twoja przeglądarka nie obsługuje elementu audio.
+      </audio>
+    </div>
+  </div>
+</div>
+</body>
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .voicebot-box {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+  }
+
+  .logo-container {
+    margin-bottom: 20px;
+  }
+
+  img {
+    max-width: 250px;
+    height: auto;
+  }
+
+  .buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .voicebot-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 30px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 8px;
+    font-size: 18px;
+  }
+
+  .voicebot-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .audio-player audio {
+    display: none;
+  }
+
+    .logout-container {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+    }
+
+    .logout-btn {
+      background-color: #f44336;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: #d32f2f;
+    }
+
+
+
+</style>
+<script>
+  let mediaRecorder;
+  let recordedChunks = [];
+
+  async function startRecording() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        recordedChunks.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = async () => {
+      const blob = new Blob(recordedChunks, { type: 'audio/wav' });
+      recordedChunks = [];
+
+      const audioFile = new File([blob], 'recorded_audio.wav', { type: 'audio/wav' });
+
+      await uploadAudioToStorage(audioFile);
+    };
+
+    mediaRecorder.start();
+
+  }
+
+  function stopRecording() {
+    if (mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+    }
+  }
+
+
+  async function uploadAudioToStorage(file) {
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const responseBody = await response.text();
+        console.log(responseBody);
+
+        const audioPlayer = document.getElementById('audioPlayer');
+        if (audioPlayer) {
+          audioPlayer.src = responseBody;
+          audioPlayer.load();
+          audioPlayer.play();
+        }
+      } else {
+        console.error('Błąd podczas przesyłania pliku na serwer.');
+      }
+    } catch (err) {
+      console.error('Błąd podczas przesyłania pliku:', err);
+    }
+  }
+
+  function restartAudio() {
+    const audioPlayer = document.getElementById('audioPlayer');
+    if (audioPlayer) {
+      audioPlayer.currentTime = 0;
+      audioPlayer.play();
+    }
+  }
+
+</script>
+</html>
