@@ -20,3 +20,9 @@ Hibernate (ORM do zarządzania bazą danych)
 Google Cloud,Speech-to-Text i Text-to-Speech
 Auth0 (Zarządzanie autoryzacją)
 MySQL (Baza danych)
+
+
+Interfejs użytkownika (UI) aplikacji.
+
+<img width="1440" alt="Zrzut ekranu 2024-04-21 o 13 17 15" src="https://github.com/Olaf2001T/VoiceBot/assets/126798783/fcce0009-6945-45b5-9bbf-31ffc41e892a">
+
