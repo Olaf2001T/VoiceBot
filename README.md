@@ -8,8 +8,8 @@ User authentication is managed using Auth0, ensuring secure access to the applic
 
 Frontend:
 
-HTML
-CSS
+HTML5
+CSS3
 JavaScript
 Thymeleaf
 Backend and other technologies:
