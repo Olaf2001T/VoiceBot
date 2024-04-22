@@ -28,6 +28,10 @@ User authentication is managed using Auth0, ensuring secure access to the applic
 - OpenAI API
 - MySQL
 
+### Security:
+- Auth0
+- Oauth 2.0
+
 ## Installation
 
 To set up the project environment, please follow the instructions below:
